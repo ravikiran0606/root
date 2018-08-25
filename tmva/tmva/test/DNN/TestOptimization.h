@@ -50,6 +50,7 @@
 #include <limits>
 #include <iostream>
 #include <chrono>
+#include <fstream>
 
 using namespace TMVA::DNN;
 using TMVA::DNN::EOptimizer;
@@ -60,7 +61,7 @@ using TMVA::DNN::EOptimizer;
  *  only ones to the 1x32 matrix used to generate the training data.
  */
 template <typename Architecture_t>
-auto testOptimization(typename Architecture_t::Scalar_t momentum, EOptimizer optimizerType, Bool_t debug) ->
+auto testOptimization(typename Architecture_t::Scalar_t momentum, EOptimizer optimizerType, Bool_t debug, std::string name) ->
    typename Architecture_t::Scalar_t
 {
    using Matrix_t = typename Architecture_t::Matrix_t;
@@ -172,10 +173,14 @@ auto testOptimization(typename Architecture_t::Scalar_t momentum, EOptimizer opt
    // Initialize the variables related to training procedure
    bool converged = false;
    size_t testInterval = 1;
-   size_t maxEpochs = 200;
+   size_t maxEpochs = 100;
    size_t batchesInEpoch = nSamples / deepNet.GetBatchSize();
    size_t convergenceCount = 0;
-   size_t convergenceSteps = 100;
+   size_t convergenceSteps = 20;
+
+   // File to output.
+   std::ofstream outfile;
+   outfile.open(name);
 
    if (debug) {
       std::string separator(62, '-');
@@ -211,6 +216,8 @@ auto testOptimization(typename Architecture_t::Scalar_t momentum, EOptimizer opt
    TMatrixT<Scalar_t> Ytemp(deepNet.GetLayerAt(deepNet.GetLayers().size() - 1)->GetOutputAt(0));
 
    std::cout << " Before Training: Mean Absolute Error = " << meanAbsoluteError(Ytemp, K) << ",";
+
+   outfile << "Epoch,Train Error,Test Error\n";
 
    Double_t minTestError = 0;
    while (!converged) {
@@ -284,6 +291,8 @@ auto testOptimization(typename Architecture_t::Scalar_t momentum, EOptimizer opt
 
          converged = optimizer->GetGlobalStep() >= maxEpochs || convergenceCount > convergenceSteps;
 
+         outfile << optimizer->GetGlobalStep() << "," << trainingError << "," << testError << "\n";
+
          if (debug) {
             std::cout << std::setw(10) << optimizer->GetGlobalStep() << " | " << std::setw(12) << trainingError
                       << std::setw(12) << testError << std::setw(12) << seconds / testInterval << std::setw(12)
@@ -307,6 +316,8 @@ auto testOptimization(typename Architecture_t::Scalar_t momentum, EOptimizer opt
          bias_tensor[0].Print();
       }
    }
+
+   outfile.close();
 
    std::cout << " No of Epochs = " << optimizer->GetGlobalStep() << ", ";
 

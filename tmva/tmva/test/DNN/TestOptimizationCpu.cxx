@@ -38,7 +38,7 @@ int main()
 
    Real_t momentumSinglePrecision = 0.0;
    std::cout << "Stochastic Gradient Descent: ";
-   Double_t error = testOptimization<TCpu<Real_t>>(momentumSinglePrecision, EOptimizer::kSGD, false);
+   Double_t error = testOptimization<TCpu<Real_t>>(momentumSinglePrecision, EOptimizer::kSGD, false, "SGD.csv");
    std::cout << "After Training: Mean Absolute error = " << error << std::endl;
    if (error > 1e-1) {
       return 1;
@@ -46,7 +46,7 @@ int main()
 
    momentumSinglePrecision = 0.9;
    std::cout << "Stochastic Gradient Descent with momentum: ";
-   error = testOptimization<TCpu<Real_t>>(momentumSinglePrecision, EOptimizer::kSGD, false);
+   error = testOptimization<TCpu<Real_t>>(momentumSinglePrecision, EOptimizer::kSGD, false, "SGDM.csv");
    std::cout << "After Training: Mean Absolute error = " << error << std::endl;
    if (error > 1e-1) {
       return 1;
@@ -55,7 +55,7 @@ int main()
    momentumSinglePrecision = 0.0;
    std::cout << "Adam Optimizer: ";
    // Adam doesn't use momentum. Passing this as a parameter just to match the function prototype.
-   error = testOptimization<TCpu<Real_t>>(momentumSinglePrecision, EOptimizer::kAdam, false);
+   error = testOptimization<TCpu<Real_t>>(momentumSinglePrecision, EOptimizer::kAdam, false, "ADAM.csv");
    std::cout << "After Training: Mean Absolute error = " << error << std::endl;
    if (error > 1e-1) {
       return 1;
@@ -64,7 +64,7 @@ int main()
    momentumSinglePrecision = 0.0;
    std::cout << "Adagrad Optimizer: ";
    // Adagrad doesn't use momentum. Passing this as a parameter just to match the function prototype.
-   error = testOptimization<TCpu<Real_t>>(momentumSinglePrecision, EOptimizer::kAdagrad, false);
+   error = testOptimization<TCpu<Real_t>>(momentumSinglePrecision, EOptimizer::kAdagrad, false, "ADAGRAD.csv");
    std::cout << "After Training: Mean Absolute error = " << error << std::endl;
    if (error > 1e-1) {
       return 1;
@@ -72,7 +72,7 @@ int main()
 
    momentumSinglePrecision = 0.0;
    std::cout << "RMSProp Optimizer without momentum: ";
-   error = testOptimization<TCpu<Real_t>>(momentumSinglePrecision, EOptimizer::kRMSProp, false);
+   error = testOptimization<TCpu<Real_t>>(momentumSinglePrecision, EOptimizer::kRMSProp, false, "RMSPROP.csv");
    std::cout << "After Training: Mean Absolute error = " << error << std::endl;
    if (error > 1e-1) {
       return 1;
@@ -80,7 +80,7 @@ int main()
 
    momentumSinglePrecision = 0.9;
    std::cout << "RMSProp Optimizer with momentum: ";
-   error = testOptimization<TCpu<Real_t>>(momentumSinglePrecision, EOptimizer::kRMSProp, false);
+   error = testOptimization<TCpu<Real_t>>(momentumSinglePrecision, EOptimizer::kRMSProp, false, "RMSPROPM.csv");
    std::cout << "After Training: Mean Absolute error = " << error << std::endl;
    if (error > 1e-1) {
       return 1;
@@ -89,7 +89,7 @@ int main()
    momentumSinglePrecision = 0.0;
    std::cout << "Adadelta Optimizer: ";
    // Adadelta doesn't use momentum. Passing this as a parameter just to match the function prototype.
-   error = testOptimization<TCpu<Real_t>>(momentumSinglePrecision, EOptimizer::kAdadelta, false);
+   error = testOptimization<TCpu<Real_t>>(momentumSinglePrecision, EOptimizer::kAdadelta, false, "ADADELTA.csv");
    std::cout << "After Training: Mean Absolute error = " << error << std::endl;
    if (error > 1e-1) {
       return 1;

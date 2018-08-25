@@ -48,6 +48,8 @@
 #include "TStopwatch.h"
 
 #include <chrono>
+#include <iostream>
+#include <fstream>
 
 REGISTER_METHOD(DL)
 ClassImp(TMVA::MethodDL);
@@ -1231,6 +1233,11 @@ void MethodDL::TrainDeepNet()
          bias_tensor[0].Print();
       }
 
+      std::ofstream outfile;
+      outfile.open("out.csv");
+
+      outfile << "Epoch,Train Error,Test Error\n";
+
 
       while (!converged) {
          optimizer->IncrementGlobalStep();
@@ -1336,6 +1343,7 @@ void MethodDL::TrainDeepNet()
             converged =
                convergenceCount > settings.convergenceSteps || optimizer->GetGlobalStep() >= settings.maxEpochs;
 
+            outfile << optimizer->GetGlobalStep() << "," << trainingError << "," << testError << "\n";
 
             Log() << std::setw(10) << optimizer->GetGlobalStep()  << " | "
                   << std::setw(12) << trainingError
@@ -1364,6 +1372,8 @@ void MethodDL::TrainDeepNet()
          }
 
       }
+
+      outfile.close();
 
       trainingPhase++;
    }  // end loop on training Phase
